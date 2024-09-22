@@ -1,6 +1,8 @@
 package com.test.weatherapp.ui.view
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -12,16 +14,19 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.test.weatherapp.data.model.WeatherUiState
 
-// Composable function for displaying the weather screen
 @Composable
 fun WeatherScreen(viewModel: WeatherViewModel, modifier: Modifier = Modifier) {
     var city by remember { mutableStateOf("") } // State for the city input
     val uiState by viewModel.uiState.observeAsState() // Observe UI state from ViewModel
 
+    // Wrap the content in a Scrollable Column
+    val scrollState = rememberScrollState() // Create a scroll state
+
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(scrollState), // Make the column scrollable
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
