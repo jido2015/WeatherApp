@@ -1,5 +1,6 @@
 package com.test.weatherapp.ui.viewmodel
 
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,10 +16,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
-    private val fetchWeatherUseCase: FetchWeatherUseCase
+    private val fetchWeatherUseCase: FetchWeatherUseCase,
+    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
+
     private val _uiState = MutableLiveData<WeatherUiState>()
     val uiState: LiveData<WeatherUiState> = _uiState
+
+    // Load the last searched city when the ViewModel is created
+    init {
+        val lastSearchedCity = loadLastSearchedCity()
+        if (lastSearchedCity != null) {
+            getWeather(lastSearchedCity)
+        }
+    }
 
     // Function to get weather data
     fun getWeather(city: String) {
@@ -28,6 +39,9 @@ class WeatherViewModel @Inject constructor(
 
             // Handle result
             handleResult(result)
+
+            // Save the last searched city
+            saveLastSearchedCity(city)
         }
     }
 
@@ -50,5 +64,14 @@ class WeatherViewModel @Inject constructor(
             }
         }
     }
-}
 
+    // Save the last searched city to SharedPreferences
+    private fun saveLastSearchedCity(city: String) {
+        sharedPreferences.edit().putString("last_searched_city", city).apply()
+    }
+
+    // Load the last searched city from SharedPreferences
+    fun loadLastSearchedCity(): String? {
+        return sharedPreferences.getString("last_searched_city", null)
+    }
+}

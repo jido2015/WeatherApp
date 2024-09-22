@@ -21,6 +21,13 @@ fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel = h
     var city by remember { mutableStateOf("") } // State for the city input
     val uiState by viewModel.uiState.observeAsState() // Observe UI state from ViewModel
 
+    // Load the last searched city into the TextField
+    LaunchedEffect(uiState) {
+        if (uiState is WeatherUiState.Success) {
+            city = viewModel.loadLastSearchedCity() ?: "" // Load the last searched city
+        }
+    }
+
     // Wrap the content in a Scrollable Column
     val scrollState = rememberScrollState() // Create a scroll state
 

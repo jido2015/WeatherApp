@@ -1,5 +1,6 @@
 package com.test.weatherapp
 
+import android.content.SharedPreferences
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.test.weatherapp.domain.model.Main
@@ -29,13 +30,23 @@ class WeatherViewModelTest {
 
     private lateinit var weatherViewModel: WeatherViewModel
     private lateinit var fetchWeatherUseCase: FetchWeatherUseCase
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
     private lateinit var observer: Observer<WeatherUiState>
 
     @Before
     fun setup() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         fetchWeatherUseCase = mock()
-        weatherViewModel = WeatherViewModel(fetchWeatherUseCase)
+        sharedPreferences = mock()
+        editor = mock()
+
+        // Mock SharedPreferences methods
+        `when`(sharedPreferences.edit()).thenReturn(editor)
+        `when`(editor.putString(anyString(), anyString())).thenReturn(editor)
+        `when`(editor.apply()).then { }
+
+        weatherViewModel = WeatherViewModel(fetchWeatherUseCase, sharedPreferences)
         observer = mock()
     }
 
