@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -40,8 +41,9 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -52,7 +54,6 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -66,4 +67,18 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.retrofit2.retrofit)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.compose.lifecycle)
+    implementation(libs.compose.livedata.runtime)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.coroutines.core)
+    implementation(libs.coil.compose)
+    implementation(libs.accompanist.permission)
+    implementation(libs.coroutines.android)
+    testImplementation(libs.morkito.core)
+//    testImplementation(libs.morkito.kotlin)
+    testImplementation(libs.core.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

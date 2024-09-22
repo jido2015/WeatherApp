@@ -6,12 +6,19 @@ import com.test.weatherapp.data.model.WeatherResponse
 import com.test.weatherapp.data.repository.WeatherRepository
 import com.test.weatherapp.domain.usecase.FetchWeatherUseCase
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNull
+import com.test.weatherapp.domain.model.Result
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+
 
 @ExperimentalCoroutinesApi
 class FetchWeatherUseCaseTest {
@@ -21,40 +28,48 @@ class FetchWeatherUseCaseTest {
 
     @Before
     fun setup() {
+        Dispatchers.setMain(UnconfinedTestDispatcher())
         repository = mock()
         fetchWeatherUseCase = FetchWeatherUseCase(repository)
     }
 
+
     @Test
     fun `fetchWeather returns data from repository`()  {
-
-        runTest{
+        runTest {
             // Given
             val weatherResponse = WeatherResponse(
                 listOf(Weather("Clear", "01d")),
                 Main(25.0)
             )
-            `when`(repository.fetchWeather("New York")).thenReturn(weatherResponse)
+            `when`(repository.fetchWeather("New York")).thenReturn(Result.Success(weatherResponse))
 
             // When
             val result = fetchWeatherUseCase("New York")
 
             // Then
-            assertEquals(weatherResponse, result)
+            assertEquals(weatherResponse, (result as Result.Success).data)
         }
     }
 
     @Test
-    fun `fetchWeather returns null for unknown city`() {
+    fun `fetchWeather returns error for unknown city`() {
         runTest {
             // Given
-            `when`(repository.fetchWeather("Unknown City")).thenReturn(null)
+            `when`(repository.fetchWeather("Unknown City")).thenReturn(Result.Error("No data available"))
 
             // When
             val result = fetchWeatherUseCase("Unknown City")
 
             // Then
-            assertNull(result)
+            assertTrue(result is Result.Error)
+            assertEquals("No data available", (result as Result.Error).message)
         }
     }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain() // Reset Main dispatcher to the original
+    }
+
 }
