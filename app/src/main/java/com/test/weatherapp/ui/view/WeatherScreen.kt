@@ -12,10 +12,11 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.test.weatherapp.data.model.WeatherUiState
 
+// Composable function for displaying the weather screen
 @Composable
 fun WeatherScreen(viewModel: WeatherViewModel, modifier: Modifier = Modifier) {
-    var city by remember { mutableStateOf("") }
-    val uiState by viewModel.uiState.observeAsState()
+    var city by remember { mutableStateOf("") } // State for the city input
+    val uiState by viewModel.uiState.observeAsState() // Observe UI state from ViewModel
 
     Column(
         modifier = modifier
@@ -24,12 +25,12 @@ fun WeatherScreen(viewModel: WeatherViewModel, modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Displaying weather result (loading, success, or error) above the TextField
+        // Display weather result based on the current UI state
         when (uiState) {
             is WeatherUiState.Success -> {
-                val weather = (uiState as WeatherUiState.Success).data
+                val weather = (uiState as WeatherUiState.Success).data // Get weather data
                 Text(
-                    text = "Temperature: ${weather.main.temp}°C",
+                    text = "Temperature: ${weather.main.temp}°C", // Display temperature
                     modifier = Modifier
                         .padding(16.dp)
                         .semantics {
@@ -37,22 +38,22 @@ fun WeatherScreen(viewModel: WeatherViewModel, modifier: Modifier = Modifier) {
                         }
                 )
                 Text(
-                    text = "Description: ${weather.weather[0].description}",
+                    text = "Description: ${weather.weather[0].description}", // Display weather description
                     modifier = Modifier.padding(8.dp).semantics {
                         contentDescription = "Weather description is ${weather.weather[0].description}"
                     }
                 )
                 AsyncImage(
-                    model = "https://openweathermap.org/img/w/${weather.weather[0].icon}.png",
+                    model = "https://openweathermap.org/img/w/${weather.weather[0].icon}.png", // Display weather icon
                     modifier = Modifier.size(48.dp),
                     contentDescription = "Weather icon showing ${weather.weather[0].description}",
                 )
             }
 
             is WeatherUiState.Error -> {
-                val errorMessage = (uiState as WeatherUiState.Error).message
+                val errorMessage = (uiState as WeatherUiState.Error).message // Get error message
                 Text(
-                    text = "Error: $errorMessage",
+                    text = "Error: $errorMessage", // Display error message
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier
                         .padding(16.dp)
@@ -63,14 +64,14 @@ fun WeatherScreen(viewModel: WeatherViewModel, modifier: Modifier = Modifier) {
             }
 
             else -> {
-                Spacer(modifier = Modifier.height(16.dp)) // Space for the UI state area
+                Spacer(modifier = Modifier.height(16.dp)) // Space for UI state area
             }
         }
 
-        // Input for the city name
+        // TextField for city name input
         TextField(
             value = city,
-            onValueChange = { city = it },
+            onValueChange = { city = it }, // Update city state on input change
             label = { Text("Enter City") },
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("City name") },
@@ -78,9 +79,9 @@ fun WeatherScreen(viewModel: WeatherViewModel, modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Button with loader inside it
+        // Button to fetch weather data
         Button(
-            onClick = { viewModel.getWeather(city) },
+            onClick = { viewModel.getWeather(city) }, // Call ViewModel method on click
             modifier = Modifier.fillMaxWidth(),
             enabled = uiState !is WeatherUiState.Loading // Disable button while loading
         ) {

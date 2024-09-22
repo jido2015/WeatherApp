@@ -18,23 +18,25 @@ import com.test.weatherapp.ui.theme.WeatherAppTheme
 import com.test.weatherapp.ui.view.WeatherScreen
 import com.test.weatherapp.ui.viewmodel.WeatherViewModelFactory
 
+// Main activity for the application
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Initialize repository, use case, and ViewModel
         val repository = WeatherRepository()
         val fetchWeatherUseCase = FetchWeatherUseCase(repository)
         val viewModelFactory = WeatherViewModelFactory(fetchWeatherUseCase)
 
         val viewModel: WeatherViewModel by viewModels { viewModelFactory }
 
-        enableEdgeToEdge()
+        enableEdgeToEdge() // Set up edge-to-edge display
         setContent {
             WeatherAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     WeatherScreen(
                         viewModel = viewModel,
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding) // Apply padding to the WeatherScreen
                     )
                 }
             }
