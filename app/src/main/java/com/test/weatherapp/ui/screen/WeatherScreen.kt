@@ -1,4 +1,4 @@
-package com.test.weatherapp.ui.view
+package com.test.weatherapp.ui.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,11 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.test.weatherapp.data.model.WeatherUiState
+import com.test.weatherapp.domain.model.WeatherUiState
+import com.test.weatherapp.ui.viewmodel.WeatherViewModel
 
 @Composable
-fun WeatherScreen(viewModel: WeatherViewModel, modifier: Modifier = Modifier) {
+fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel = hiltViewModel()) {
     var city by remember { mutableStateOf("") } // State for the city input
     val uiState by viewModel.uiState.observeAsState() // Observe UI state from ViewModel
 

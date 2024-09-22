@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.devtools.ksp)
 }
 
 android {
@@ -78,7 +80,10 @@ dependencies {
     implementation(libs.accompanist.permission)
     implementation(libs.coroutines.android)
     testImplementation(libs.morkito.core)
-//    testImplementation(libs.morkito.kotlin)
     testImplementation(libs.core.testing)
     testImplementation(libs.kotlinx.coroutines.test)
+    ksp(libs.hilt.ksp)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation)
+    implementation(libs.compose.navigation)
 }

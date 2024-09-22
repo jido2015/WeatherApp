@@ -2,7 +2,7 @@ package com.test.weatherapp.data.repository
 
 import com.test.weatherapp.data.api.WeatherApiService
 import com.test.weatherapp.domain.model.Result
-import com.test.weatherapp.data.model.WeatherResponse
+import com.test.weatherapp.domain.model.WeatherResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

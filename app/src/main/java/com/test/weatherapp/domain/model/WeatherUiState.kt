@@ -1,4 +1,4 @@
-package com.test.weatherapp.data.model
+package com.test.weatherapp.domain.model
 
 // Sealed class for UI state representation
 sealed class WeatherUiState {

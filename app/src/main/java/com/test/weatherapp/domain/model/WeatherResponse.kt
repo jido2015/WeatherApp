@@ -1,4 +1,4 @@
-package com.test.weatherapp.data.model
+package com.test.weatherapp.domain.model
 
 // Data classes for parsing weather data
 data class WeatherResponse(

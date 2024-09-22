@@ -1,14 +1,14 @@
 package com.test.weatherapp
 
-import WeatherViewModel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.test.weatherapp.data.model.Main
-import com.test.weatherapp.data.model.Weather
-import com.test.weatherapp.data.model.WeatherResponse
-import com.test.weatherapp.data.model.WeatherUiState
+import com.test.weatherapp.domain.model.Main
 import com.test.weatherapp.domain.usecase.FetchWeatherUseCase
 import com.test.weatherapp.domain.model.Result
+import com.test.weatherapp.domain.model.Weather
+import com.test.weatherapp.domain.model.WeatherResponse
+import com.test.weatherapp.domain.model.WeatherUiState
+import com.test.weatherapp.ui.viewmodel.WeatherViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before

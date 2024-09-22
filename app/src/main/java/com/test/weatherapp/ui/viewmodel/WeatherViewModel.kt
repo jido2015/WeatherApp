@@ -1,15 +1,22 @@
+package com.test.weatherapp.ui.viewmodel
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.test.weatherapp.data.model.WeatherResponse
-import com.test.weatherapp.data.model.WeatherUiState
-import com.test.weatherapp.data.model.WeatherUiState.*
 import com.test.weatherapp.domain.usecase.FetchWeatherUseCase
 import com.test.weatherapp.domain.model.Result
+import com.test.weatherapp.domain.model.WeatherResponse
+import com.test.weatherapp.domain.model.WeatherUiState
+import com.test.weatherapp.domain.model.WeatherUiState.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class WeatherViewModel(private val fetchWeatherUseCase: FetchWeatherUseCase) : ViewModel() {
+@HiltViewModel
+class WeatherViewModel @Inject constructor(
+    private val fetchWeatherUseCase: FetchWeatherUseCase
+) : ViewModel() {
     private val _uiState = MutableLiveData<WeatherUiState>()
     val uiState: LiveData<WeatherUiState> = _uiState
 

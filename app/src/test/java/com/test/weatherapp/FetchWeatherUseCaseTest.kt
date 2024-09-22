@@ -1,12 +1,12 @@
 package com.test.weatherapp
 
-import com.test.weatherapp.data.model.Main
-import com.test.weatherapp.data.model.Weather
-import com.test.weatherapp.data.model.WeatherResponse
 import com.test.weatherapp.data.repository.WeatherRepository
+import com.test.weatherapp.domain.model.Main
 import com.test.weatherapp.domain.usecase.FetchWeatherUseCase
 import junit.framework.TestCase.assertEquals
 import com.test.weatherapp.domain.model.Result
+import com.test.weatherapp.domain.model.Weather
+import com.test.weatherapp.domain.model.WeatherResponse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
