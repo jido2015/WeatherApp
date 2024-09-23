@@ -86,4 +86,5 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation)
     implementation(libs.compose.navigation)
+    implementation(libs.play.services.location)
 }

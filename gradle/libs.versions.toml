@@ -19,6 +19,7 @@ core-testing = "2.2.0"
 dagger-hilt = "2.51.1"
 hilt-navigation = "1.2.0"
 navigation = "2.8.1"
+play-location = "21.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +36,7 @@ lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-view
 lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 compose-livedata-runtime = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "compose-livedata" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-location" }
 
 
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -57,7 +59,6 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

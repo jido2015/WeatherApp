@@ -2,22 +2,47 @@ package com.test.weatherapp.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.test.weatherapp.data.api.WeatherApiService
+import com.test.weatherapp.data.location.LocationService
 import com.test.weatherapp.data.repository.WeatherRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+
+
+
 
 @Module
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
 
+
     @Provides
     @Singleton
-    fun provideWeatherRepository(): WeatherRepository {
-        return WeatherRepository()
+    fun provideRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://api.openweathermap.org/data/2.5/") // Base URL for the API
+            .addConverterFactory(GsonConverterFactory.create()) // Converter for JSON to Kotlin objects
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWeatherApiService(retrofit: Retrofit): WeatherApiService {
+        return retrofit.create(WeatherApiService::class.java) // Create the API service instance
+    }
+
+    @Provides
+    @Singleton
+    fun provideWeatherRepository(weatherApi: WeatherApiService): WeatherRepository {
+        return WeatherRepository(weatherApi)
     }
 
     @Provides
@@ -26,5 +51,18 @@ object RepositoryModule {
         @ApplicationContext context: Context
     ): SharedPreferences {
         return context.getSharedPreferences("weather_app_prefs", Context.MODE_PRIVATE)
+    }
+
+    @Provides
+    fun provideFusedLocationProviderClient(@ApplicationContext context: Context): FusedLocationProviderClient {
+        return LocationServices.getFusedLocationProviderClient(context)
+    }
+
+    @Provides
+    fun provideLocationService(
+        fusedLocationProviderClient: FusedLocationProviderClient,
+        @ApplicationContext context: Context
+    ): LocationService {
+        return LocationService( context, fusedLocationProviderClient)
     }
 }
