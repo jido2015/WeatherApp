@@ -1,5 +1,7 @@
 package com.test.weatherapp
 
+import android.content.Context
+import android.location.Location
 import com.test.weatherapp.data.repository.WeatherRepository
 import com.test.weatherapp.domain.model.Main
 import com.test.weatherapp.domain.usecase.FetchWeatherUseCase
@@ -25,12 +27,20 @@ class FetchWeatherUseCaseTest {
 
     private lateinit var fetchWeatherUseCase: FetchWeatherUseCase
     private lateinit var repository: WeatherRepository
+    private lateinit var context: Context
+    private lateinit var location: Location
 
     @Before
     fun setup() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         repository = mock()
         fetchWeatherUseCase = FetchWeatherUseCase(repository)
+        context = mock()
+
+        location = mock(Location::class.java).apply {
+            `when`(latitude).thenReturn(37.7749)
+            `when`(longitude).thenReturn(-122.4194)
+        }
     }
 
 

@@ -35,7 +35,7 @@ class WeatherRepository @Inject constructor(
         }
     }
 
-    suspend fun fetchWeather(context: Context, location: Location): Result<String> {
+    suspend fun getCityName(context: Context, location: Location): Result<String> {
         return try {
             // Create an instance of Geocoder
             val geocoder = Geocoder(context) // Ensure you have context

@@ -14,7 +14,7 @@ class FetchWeatherUseCase @Inject constructor(private val repository: WeatherRep
     }
 
     suspend operator fun invoke(context: Context, location: Location): Result<String> {
-        return repository.fetchWeather(context,location) // Invoke the repository method
+        return repository.getCityName(context,location) // Invoke the repository method
     }
 }
 
