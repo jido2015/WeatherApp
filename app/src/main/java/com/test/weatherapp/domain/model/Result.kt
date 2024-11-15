@@ -4,5 +4,5 @@ package com.test.weatherapp.domain.model
 sealed class Result<out T> {
     data class Success<T>(val data: T) : Result<T>() // Success case
     data class Error(val message: String) : Result<Nothing>() // Error case
-    object Loading : Result<Nothing>() // Loading state
+    data object Loading : Result<Nothing>() // Loading state
 }

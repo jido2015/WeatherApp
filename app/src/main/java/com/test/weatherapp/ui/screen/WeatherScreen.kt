@@ -19,7 +19,7 @@ import com.test.weatherapp.ui.viewmodel.WeatherViewModel
 @Composable
 fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel = hiltViewModel()) {
     var city by remember { mutableStateOf("") } // State for the city input
-    val uiState by viewModel.uiState.observeAsState() // Observe UI state from ViewModel
+    val uiState by viewModel.uiState.collectAsState() // Observe UI state from ViewModel
 
     // Load the last searched city into the TextField
     LaunchedEffect(uiState) {
@@ -44,7 +44,7 @@ fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel = h
             is WeatherUiState.Success -> {
                 val weather = (uiState as WeatherUiState.Success).data // Get weather data
                 Text(
-                    text = "Temperature: ${weather.main.temp}°C", // Display temperature
+                    text = "Temperature: ${weather!!.main.temp}°C", // Display temperature
                     modifier = Modifier
                         .padding(16.dp)
                         .semantics {

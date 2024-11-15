@@ -1,8 +1,12 @@
 package com.test.weatherapp.domain.model
 
-// Sealed class for UI state representation
-sealed class WeatherUiState {
-    object Loading : WeatherUiState() // Loading state
-    data class Success(val data: WeatherResponse) : WeatherUiState() // Success state with data
-    data class Error(val message: String) : WeatherUiState() // Error state with message
+/**Sealed class for Handling Api Response*/
+sealed class WeatherUiState<T>(
+    val data: T? = null,
+    val message: String? = null
+) {
+
+    class Success<T>(data: T) : WeatherUiState<T>(data)
+    class Error<T>(errorText: String?, data: T? = null) : WeatherUiState<T>(data, errorText)
+    class Loading<Boolean> : WeatherUiState<Boolean>()
 }

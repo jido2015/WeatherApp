@@ -14,6 +14,7 @@ import com.test.weatherapp.domain.model.WeatherUiState
 import com.test.weatherapp.domain.model.WeatherUiState.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,8 +26,9 @@ class WeatherViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    private val _uiState = MutableLiveData<WeatherUiState>()
-    val uiState: LiveData<WeatherUiState> = _uiState
+
+    private val _uiState = MutableStateFlow<WeatherUiState<WeatherResponse>>(Loading())
+    val uiState = _uiState
 
     // Load the last searched city when the ViewModel is created
     init {
@@ -68,14 +70,12 @@ class WeatherViewModel @Inject constructor(
                 }
             }
 
-            // Optionally, you can store the location in SharedPreferences if needed
-            // saveLastKnownLocation(latitude, longitude)
         }
     }
 
     // Set loading state
     private fun setLoadingState() {
-        _uiState.value = Loading
+        _uiState.value = Loading()
     }
 
     // Handle the result and update UI state
