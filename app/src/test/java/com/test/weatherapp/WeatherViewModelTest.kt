@@ -18,11 +18,12 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-
 @ExperimentalCoroutinesApi
 class WeatherViewModelTest {
 
@@ -33,7 +34,6 @@ class WeatherViewModelTest {
     private lateinit var fetchWeatherUseCase: FetchWeatherUseCase
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
-    private lateinit var observer: Observer<WeatherUiState>
     private lateinit var context: Context
 
     @Before
@@ -50,49 +50,68 @@ class WeatherViewModelTest {
         `when`(editor.apply()).then { }
 
         weatherViewModel = WeatherViewModel(fetchWeatherUseCase, sharedPreferences, context)
-        observer = mock()
     }
 
     @Test
-    fun `getWeather should update UI state when use case returns data`() {
-        runTest {
-            // Given
-            val weatherResponse = WeatherResponse(
-                listOf(Weather("Clear", "01d")),
-                Main(25.0)
-            )
-            `when`(fetchWeatherUseCase("New York")).thenReturn(Result.Success(weatherResponse))
+    fun `getWeather should update UI state when use case returns data`() = runTest {
+        // Given
+        val weatherResponse = WeatherResponse(
+            listOf(Weather("Clear", "01d")),
+            Main(25.0)
+        )
+        `when`(fetchWeatherUseCase("New York")).thenReturn(Result.Success(weatherResponse))
 
-            // Attach observer to LiveData
-            weatherViewModel.uiState.observeForever(observer)
+        // Create a list to collect StateFlow emissions
+        val collectedStates = mutableListOf<Result<WeatherResponse>>()
 
-            // When
-            weatherViewModel.getWeather("New York")
-
-            // Then
-            verify(observer).onChanged(WeatherUiState.Loading) // Verify loading state
-            verify(observer).onChanged(WeatherUiState.Success(weatherResponse)) // Verify success state
-            verifyNoMoreInteractions(observer)
+        // Collect emissions from the StateFlow in a coroutine
+        val job = launch {
+            weatherViewModel.uiState.collect {
+                collectedStates.add(it)
+            }
         }
+
+        // When
+        weatherViewModel.getWeather("New York")
+
+        // Wait for emissions to propagate
+        advanceUntilIdle()
+
+        // Then
+        assert(collectedStates[0] is Result.Loading) // Verify loading state
+        assert(collectedStates[1] is Result.Success && (collectedStates[1] as Result.Success).data == weatherResponse) // Verify success state
+
+        // Cleanup
+        job.cancel()
     }
 
     @Test
-    fun `getWeather should handle error response from use case`() {
-        runTest {
-            // Given
-            `when`(fetchWeatherUseCase("Unknown City")).thenReturn(Result.Error("City not found"))
+    fun `getWeather should handle error response from use case`() = runTest {
+        // Given
+        `when`(fetchWeatherUseCase("Unknown City")).thenReturn(Result.Error("City not found"))
 
-            // Attach observer to LiveData
-            weatherViewModel.uiState.observeForever(observer)
+        // Create a list to collect StateFlow emissions
+        val collectedStates = mutableListOf<Result<WeatherResponse>>()
 
-            // When
-            weatherViewModel.getWeather("Unknown City")
-
-            // Then
-            verify(observer).onChanged(WeatherUiState.Loading) // Verify loading state
-            verify(observer).onChanged(WeatherUiState.Error("City not found")) // Verify error state
-            verifyNoMoreInteractions(observer)
+        // Collect emissions from the StateFlow in a coroutine
+        val job = launch {
+            weatherViewModel.uiState.collect {
+                collectedStates.add(it)
+            }
         }
+
+        // When
+        weatherViewModel.getWeather("Unknown City")
+
+        // Wait for emissions to propagate
+        advanceUntilIdle()
+
+        // Then
+        assert(collectedStates[0] is Result.Loading) // Verify loading state
+        assert(collectedStates[1] is Result.Error && (collectedStates[1] as Result.Error).message == "City not found") // Verify error state
+
+        // Cleanup
+        job.cancel()
     }
 
     @After

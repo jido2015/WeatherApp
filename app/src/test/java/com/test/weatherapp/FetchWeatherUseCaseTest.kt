@@ -1,6 +1,5 @@
 package com.test.weatherapp
 
-import android.content.Context
 import com.test.weatherapp.data.repository.WeatherRepository
 import com.test.weatherapp.domain.model.Main
 import com.test.weatherapp.domain.usecase.FetchWeatherUseCase
@@ -26,15 +25,12 @@ class FetchWeatherUseCaseTest {
 
     private lateinit var fetchWeatherUseCase: FetchWeatherUseCase
     private lateinit var repository: WeatherRepository
-    private lateinit var context: Context
 
     @Before
     fun setup() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         repository = mock()
         fetchWeatherUseCase = FetchWeatherUseCase(repository)
-        context = mock()
-
     }
 
 
